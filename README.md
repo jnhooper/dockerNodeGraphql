@@ -1,6 +1,7 @@
-# dockerNode
-This Repo uses node on the backend and has hot module reloading
-working in both the back and frontend portions.
+# dockerNodeGraphQl
+This is a repo of boilerplate with the basics setup for docker, node and graphql.
+It has hot reloading on the front end and automatic server restarts on the backend
+thanks to nodemon
 
 ### Server
 run `docker-compose up` and navigate to localhost:3000
