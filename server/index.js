@@ -1,25 +1,100 @@
-const { ApolloServer, gql } = require('apollo-server');
+import jwt from 'jsonwebtoken';
+import express from 'express';
+import {
+  ApolloServer,
+  AuthenticationError,
+} from 'apollo-server-express';
 
-// The GraphQL schema
-const typeDefs = gql`
-  type Query {
-    "A simple type for getting started!"
-    hello: String
-  }
-`;
+import schema from './schema';
+import resolvers from './resolvers';
+import models, { sequelize } from './models';
 
-// A map of functions which return data for the schema.
-const resolvers = {
-  Query: {
-    hello: () => 'world'
+
+const getMe = async req => {
+  const token = req.headers['x-token'];
+
+  if (token) {
+    try {
+      return await jwt.verify(token, process.env.SECRET);
+    } catch (e) {
+      throw new AuthenticationError(
+        'Your session expired. Sign in again.'
+      )
+    }
   }
 };
 
 const server = new ApolloServer({
-  typeDefs,
+  typeDefs: schema,
   resolvers,
+  formatError: error => {
+    const message = error.message
+      .replace('SequelizeValidationError: ', '')
+      .replace('Validation error: ', '');
+    
+    return {
+      ...error,
+      message,
+    }
+  },
+  context: async ({ req }) => {
+    const me = await getMe(req);
+
+    return {
+      models,
+      me, 
+      secret: process.env.SECRET,
+    }
+  }
 });
 
-server.listen({port:3000}).then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`)
-});
+const app = express();
+server.applyMiddleware({ app })
+
+const eraseDatabaseOnSync = true;
+
+sequelize.sync({ force: eraseDatabaseOnSync }).then(
+  async () => {
+    if (eraseDatabaseOnSync) {
+      createUserWidthMessages();
+    }
+    app.listen({ port: 3000 }, () =>
+      console.log(`🚀 Server ready at http://localhost:3000${server.graphqlPath}`)
+    );
+  }
+);
+
+const createUserWidthMessages = async () => {
+  await models.User.create(
+    {
+      username: 'rwieruch',
+      email: 'hello@robin.com',
+      password: 'password',
+      role: 'ADMIN',
+      messages: [
+        {
+          text: 'Published something'
+        },
+      ],
+    },
+    {
+      include: [models.Message],
+    }
+  );
+  
+  await models.User.create(
+    {
+      username: 'ddavids',
+      email: 'hello@david.com',
+      password: 'password',
+      messages: [
+        {
+          text: 'Happy to release ...',
+        }
+      ],
+    },
+    {
+      include: [models.Message]
+    }
+  )
+}
