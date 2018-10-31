@@ -15,13 +15,11 @@ export default gql`
     ): Token!
 
     signIn(
-      login: String!,
+      login: String!
       password: String!
     ): Token!
 
-    deleteUser(
-      id: ID!
-    ): Boolean!
+    deleteUser(id: ID!): Boolean!
   }
 
   type Token {

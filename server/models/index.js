@@ -1,29 +1,33 @@
 import Sequelize from 'sequelize';
 
-console.log('<><><><><<><><><><><><><><>')
-console.log(process.env.DATABASE)
+console.log(
+  '<><><><><<><><><><><><><><>'
+);
+console.log(process.env.DATABASE);
 const sequelize = new Sequelize(
   process.env.DATABASE,
   process.env.DATABASE_USER,
   process.env.DATABASE_PASSWORD,
   {
     dialect: 'postgres',
-    host: 'dockerNodeGraphql_postgres'
+    host: 'dockerNodeGraphql_postgres',
   }
-)
+);
 
 const models = {
   User: sequelize.import('./user'),
-  Message: sequelize.import('./message'),
+  Message: sequelize.import(
+    './message'
+  ),
 };
 
 Object.keys(models).forEach(key => {
   if ('associate' in models[key]) {
     models[key].associate(models);
   }
-})
+});
 
-export {sequelize};
+export { sequelize };
 export default models;
 // let users = {
 //   1: {
@@ -31,7 +35,7 @@ export default models;
 //     username: 'Robin Wieruch',
 //     messageIds: [1],
 //   },
-//   2: 
+//   2:
 //     id: '2',
 //     username: 'Dave Davids',
 //     messageIds: [2],

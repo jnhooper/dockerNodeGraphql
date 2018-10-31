@@ -1,14 +1,10 @@
 import jwt from 'jsonwebtoken';
 import express from 'express';
-import {
-  ApolloServer,
-  AuthenticationError,
-} from 'apollo-server-express';
+import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 
 import schema from './schema';
 import resolvers from './resolvers';
 import models, { sequelize } from './models';
-
 
 const getMe = async req => {
   const token = req.headers['x-token'];
@@ -17,9 +13,7 @@ const getMe = async req => {
     try {
       return await jwt.verify(token, process.env.SECRET);
     } catch (e) {
-      throw new AuthenticationError(
-        'Your session expired. Sign in again.'
-      )
+      throw new AuthenticationError('Your session expired. Sign in again.');
     }
   }
 };
@@ -31,38 +25,36 @@ const server = new ApolloServer({
     const message = error.message
       .replace('SequelizeValidationError: ', '')
       .replace('Validation error: ', '');
-    
+
     return {
       ...error,
-      message,
-    }
+      message
+    };
   },
   context: async ({ req }) => {
     const me = await getMe(req);
 
     return {
       models,
-      me, 
-      secret: process.env.SECRET,
-    }
+      me,
+      secret: process.env.SECRET
+    };
   }
 });
 
 const app = express();
-server.applyMiddleware({ app })
+server.applyMiddleware({ app });
 
 const eraseDatabaseOnSync = true;
 
-sequelize.sync({ force: eraseDatabaseOnSync }).then(
-  async () => {
-    if (eraseDatabaseOnSync) {
-      createUserWidthMessages();
-    }
-    app.listen({ port: 3000 }, () =>
-      console.log(`🚀 Server ready at http://localhost:3000${server.graphqlPath}`)
-    );
+sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
+  if (eraseDatabaseOnSync) {
+    createUserWidthMessages();
   }
-);
+  app.listen({ port: 3000 }, () =>
+    console.log(`🚀 Server ready at http://localhost:3000${server.graphqlPath}`)
+  );
+});
 
 const createUserWidthMessages = async () => {
   await models.User.create(
@@ -74,14 +66,14 @@ const createUserWidthMessages = async () => {
       messages: [
         {
           text: 'Published something'
-        },
-      ],
+        }
+      ]
     },
     {
-      include: [models.Message],
+      include: [models.Message]
     }
   );
-  
+
   await models.User.create(
     {
       username: 'ddavids',
@@ -89,12 +81,12 @@ const createUserWidthMessages = async () => {
       password: 'password',
       messages: [
         {
-          text: 'Happy to release ...',
+          text: 'Happy to release ...'
         }
-      ],
+      ]
     },
     {
       include: [models.Message]
     }
-  )
-}
+  );
+};

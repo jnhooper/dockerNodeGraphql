@@ -5,20 +5,20 @@ import messageSchema from './messages';
 
 const linkSchema = gql`
   type Query {
-    _:Boolean
+    _: Boolean
   }
 
   type Mutation {
-    _:Boolean
+    _: Boolean
   }
 
   type Subscription {
-    _:Boolean
+    _: Boolean
   }
 `;
 
 export default [
   linkSchema,
   userSchema,
-  messageSchema
+  messageSchema,
 ];
