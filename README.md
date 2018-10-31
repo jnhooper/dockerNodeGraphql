@@ -14,3 +14,6 @@ alternatively you could just run `docker-compose run web yarn add .....`
 
 ### killing docker
 run `docker-compose down`
+
+### useful site for docker commands
+https://zaiste.net/removing_docker_containers/
