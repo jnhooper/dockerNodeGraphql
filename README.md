@@ -4,7 +4,7 @@ It has hot reloading on the front end and automatic server restarts on the backe
 thanks to nodemon
 
 ### Server
-run `docker-compose up` and navigate to localhost:3000
+run `docker-compose up` and navigate to localhost:3000/graphql
 
 *note: you will likely want to change the postgres container_name to be something project specific
 ### Client
