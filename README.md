@@ -5,6 +5,7 @@ thanks to nodemon
 
 ### Server
 run `docker-compose up` and navigate to localhost:3000
+
 *note: you will likely want to change the postgres container_name to be something project specific
 ### Client
 run `docker-compose exec web npm run start:client` and navigate to localhost:8080
