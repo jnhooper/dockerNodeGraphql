@@ -19,3 +19,6 @@ run `docker-compose down`
 
 ### useful site for docker commands
 https://zaiste.net/removing_docker_containers/
+
+### created following 
+https://www.robinwieruch.de/graphql-apollo-server-tutorial/#graphql-registration-sign-up-authentication
