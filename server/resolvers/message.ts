@@ -11,23 +11,17 @@ export default {
       parent,
       { offset = 0, limit = 100 },
       { models }
-    ) => {
-      return await models.Message.findAll(
-        {
-          offset,
-          limit,
-        }
-      );
-    },
+    ) =>
+      await models.Message.findAll({
+        offset,
+        limit,
+      }),
     message: async (
       parent,
       { id },
       { models }
-    ) => {
-      return await models.Message.findById(
-        id
-      );
-    },
+    ) =>
+      await models.Message.findById(id),
   },
 
   Mutation: {
@@ -37,14 +31,11 @@ export default {
         parent,
         { text },
         { me, models }
-      ) => {
-        return await models.Message.create(
-          {
-            text,
-            userId: me.id,
-          }
-        );
-      }
+      ) =>
+        await models.Message.create({
+          text,
+          userId: me.id,
+        })
     ),
 
     deleteMessage: combineResolvers(
@@ -54,11 +45,10 @@ export default {
         parent,
         { id },
         { models }
-      ) => {
-        return await models.Message.destroy(
-          { where: { id } }
-        );
-      }
+      ) =>
+        await models.Message.destroy({
+          where: { id },
+        })
     ),
   },
 
@@ -67,10 +57,9 @@ export default {
       message,
       args,
       { models }
-    ) => {
-      return await models.User.findById(
+    ) =>
+      await models.User.findById(
         message.userId
-      );
-    },
+      ),
   },
 };
