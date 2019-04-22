@@ -7,15 +7,13 @@ const sequelize: any = new sqlize(
   process.env.DATABASE_PASSWORD,
   {
     dialect: 'postgres',
-    host: 'dockerNodeGraphql_postgres',
+    host: process.env.DATABASE_CONTAINER,
   }
 );
 
 const models = {
   User: sequelize.import('./user'),
-  Message: sequelize.import(
-    './message'
-  ),
+  Message: sequelize.import('./message'),
 };
 
 Object.keys(models).forEach(key => {

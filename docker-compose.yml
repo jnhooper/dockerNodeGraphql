@@ -26,6 +26,8 @@ services:
       DATABASE: postgres
       DATABASE_USER: postgres
       DATABASE_PASSWORD: postgres
+      #database container name.
+      DATABASE_CONTAINER: dockerNodeGraphql_postgres
       # change the secret  when you pull this and put into prod.
       SECRET: A.1238789783432098.7p[[p[wkfsd/fmd.fj
       #port the graphql server is on
