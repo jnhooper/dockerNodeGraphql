@@ -1,29 +1,19 @@
 import jwt from 'jsonwebtoken';
 import express from 'express';
-import {
-  ApolloServer,
-  AuthenticationError,
-} from 'apollo-server-express';
+import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 
 import schema from './schema';
 import resolvers from './resolvers';
-import models, {
-  sequelize,
-} from './models';
+import models, { sequelize } from './models';
 
 const getMe = async req => {
   const token = req.headers['x-token'];
 
   if (token) {
     try {
-      return await jwt.verify(
-        token,
-        process.env.SECRET
-      );
+      return await jwt.verify(token, process.env.SECRET);
     } catch (e) {
-      throw new AuthenticationError(
-        'Your session expired. Sign in again.'
-      );
+      throw new AuthenticationError('Your session expired. Sign in again.');
     }
   }
 };
@@ -34,14 +24,8 @@ const server = new ApolloServer({
   // resolvers: resolversT,
   formatError: error => {
     const message = error.message
-      .replace(
-        'SequelizeValidationError: ',
-        ''
-      )
-      .replace(
-        'Validation error: ',
-        ''
-      );
+      .replace('SequelizeValidationError: ', '')
+      .replace('Validation error: ', '');
 
     return {
       ...error,
@@ -64,29 +48,25 @@ server.applyMiddleware({ app });
 
 const eraseDatabaseOnSync = true;
 
-sequelize
-  .sync({ force: eraseDatabaseOnSync })
-  .then(async () => {
-    if (eraseDatabaseOnSync) {
-      console.log('CREATING USERS');
-      createUserWidthMessages();
-    }
-    app.listen(
-      {
-        port: parseInt(
-          process.env.SERVER_PORT
-        ),
-      },
-      () =>
-        console.log(
-          `🚀 Server ready at http://localhost:${
-            process.env.SERVER_PORT
-          }${server.graphqlPath}`
-        )
-    );
-  });
+sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
+  if (eraseDatabaseOnSync) {
+    console.log('CREATING USERS');
+    createUserWithMessages();
+  }
+  app.listen(
+    {
+      port: parseInt(process.env.SERVER_PORT),
+    },
+    () =>
+      console.log(
+        `🚀 Server ready at http://localhost:${process.env.SERVER_PORT}${
+          server.graphqlPath
+        }`
+      )
+  );
+});
 
-const createUserWidthMessages = async () => {
+const createUserWithMessages = async () => {
   await models.User.create(
     {
       username: 'rwieruch',
